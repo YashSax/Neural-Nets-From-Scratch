@@ -18,10 +18,15 @@ class Sequential():
             x = module.forward(x)
         return x
 
+class MSELoss():
+    def __call__(self, y_true, y_pred):
+        return np.sum(np.sqrt(y_true ** 2 + y_pred ** 2))
+
 class Layer(Module):
     def __init__(self, in_dim: int, out_dim: int, weights=None):
         self.in_dim = in_dim
         self.out_dim = out_dim
+        self.grad = np.zeros_like(weights)
 
         self.weights = weights
         if self.weights is None:
@@ -48,8 +53,6 @@ model = Sequential([
 ])
 
 ex_in = np.array([1, 2])
-print(ex_in.shape)
 ex_out = model.forward(ex_in)
-print(ex_out.shape)
-print("Out:", ex_out)
 
+criterion = MSELoss()
