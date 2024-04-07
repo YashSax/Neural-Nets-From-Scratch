@@ -2,11 +2,13 @@ import numpy as np
 from abc import ABC, abstractmethod
 from typing import List
 
-# Create ABC for module, must have forward and grad methods
 class Module(ABC):
     @abstractmethod
     def forward(self, x: np.array):
         pass
+
+    def __call__(self, x: np.array):
+        return self.forward(x)
 
 class LossFn(ABC):
     @abstractmethod
@@ -77,11 +79,16 @@ class Layer(Module):
 
 
 class ReLU(Module):
+    def __init__(self):
+        self.relu_in = None
+    
     def forward(self, x: np.array):
         self.relu_in = x
         return np.maximum(x, np.zeros_like(x))
     
     def backward(self, next_grad: np.array):
+        if self.relu_in is None:
+            raise Exception("'forward' method has not been called on ReLU!")
         relu_grad = np.where(self.relu_in < 0, 0, 1)
         self.grad = np.multiply(relu_grad, next_grad)
         return self.grad
