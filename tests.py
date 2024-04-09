@@ -1,4 +1,5 @@
 from network import *
+import random
 import unittest
 
 class TestActivationFunctions(unittest.TestCase):
@@ -67,6 +68,31 @@ class TestSequential(unittest.TestCase):
         desired_out = np.array([15])
         self.assertTrue(np.all(model_out == desired_out))
 
+class IntegrationTests(unittest.TestCase):
+    def test_1(self):
+        m = 2
+        b = 1
+        ideal_weights = np.array([[m], [b]])
+        def generate_training_example():
+            model_in = np.random.randint(low=-10, high=10, size=(1, 1))
+            model_out = m * model_in + b
+            return model_in, model_out[0]
+        
+        model = Sequential([
+            Layer(1, 1) # Note that the bias term in the layer covers for the y-intercept
+        ],
+        criterion=MSELoss())
 
+        data = [generate_training_example() for _ in range(100)]
+        for _ in range(100):
+            model_in, model_out = random.choice(data)
+            pred_out = model.forward(model_in)
+            model.calculate_loss(model_out, pred_out)
+            model.backward()
+            model.SGD_step()
+        
+        model_weights = model.modules[0].weights
+        self.assertTrue(np.allclose(model_weights, ideal_weights, 1, 0.2))
+            
 if __name__ == "__main__":
     unittest.main()
