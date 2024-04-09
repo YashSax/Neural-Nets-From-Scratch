@@ -2,6 +2,8 @@ import numpy as np
 from abc import ABC, abstractmethod
 from typing import List
 
+np.random.seed(69420)
+
 class Module(ABC):
     @abstractmethod
     def forward(self, x: np.array):
@@ -10,10 +12,12 @@ class Module(ABC):
     def __call__(self, x: np.array):
         return self.forward(x)
 
+
 class LossFn(ABC):
     @abstractmethod
     def __call__(self, y_true: np.array, y_pred: np.array):
         pass
+
 
 class Sequential():
     def __init__(self, modules: List[Module], criterion: LossFn):
@@ -36,6 +40,12 @@ class Sequential():
         prev_grad = self.criterion.backward()
         for module in reversed_modules:
             prev_grad = module.backward(prev_grad)
+    
+    def SGD_step(self, alpha=0.01):
+        for module in self.modules:
+            if type(module) == Layer:
+                module.weights = module.weights - alpha * module.grad
+
 
 class MSELoss(LossFn):
     def __call__(self, y_true: np.array, y_pred: np.array):
@@ -48,7 +58,7 @@ class MSELoss(LossFn):
         return np.sum((y_true - y_pred) ** 2) / len(y_pred)
 
     def backward(self):
-        self.grad = 2 / len(self.y_pred) * (self.y_true - self.y_pred)
+        self.grad = 2 / len(self.y_pred) * (self.y_pred - self.y_true)
         return self.grad
 
 
@@ -92,6 +102,21 @@ class ReLU(Module):
         relu_grad = np.where(self.relu_in < 0, 0, 1)
         self.grad = np.multiply(relu_grad, next_grad)
         return self.grad
+
+
+# class Sigmoid(Module):
+#     def __init__(self):
+#         self.sigmoid_in = None
+    
+#     def forward(self, x: np.array):
+#         self.sigmoid_in = x
+#         self.sigmoid_out = 1 / (1 + np.exp(x))
+#         return self.sigmoid_out
+    
+#     def backward(self, next_grad: np.array):
+#         if self.sigmoid_out is None:
+#             raise Exception("'forward' method has not been called on Sigmoid!")
+#         sigmoid_grad = 
 
 
 class Softmax(Module):
