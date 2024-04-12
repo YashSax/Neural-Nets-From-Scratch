@@ -1,2 +1,3 @@
 Make all activation functions have the same interface (no "relu_in" or "sigmoid_in")
 Split functions into different files
+Function Approximation for sin

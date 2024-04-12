@@ -17,18 +17,18 @@ class TestActivationFunctions(unittest.TestCase):
 class TestLayer(unittest.TestCase):
     def test_layer(self):
         layer = Layer(3, 3)
-        layer_in = np.expand_dims(np.array([1, 2, 3]), axis=1)
-        layer.weights = np.array([
+        layer_in = np.expand_dims(np.array([1, 2, 3]), axis=0)
+        layer.weights = np.transpose(np.array([
             [0, 1, -1],
             [1, -1, 1],
             [2, -1, -2],
             [-1, 1, 0]
-        ])
+        ]))
         layer_out = layer.forward(layer_in)
         desired_out = np.array([7, -3, -5])
         self.assertTrue(np.all(layer_out == desired_out))
 
-        next_grad = np.array([1, 2, 3])
+        next_grad = np.expand_dims(np.array([1, 2, 3]), axis=0)
         grad_out = layer.backward(next_grad)
         desired_grad_out = np.array([-1, 2, -6])
         desired_grad = np.array([
@@ -43,19 +43,19 @@ class TestLayer(unittest.TestCase):
 class TestSequential(unittest.TestCase):
     def test_1(self):
         layer_1 = Layer(2, 3)
-        layer_1.weights = np.array([
+        layer_1.weights = np.transpose(np.array([
             [1, 7, 4],
             [3, 5, 6],
             [2, 8, 3]
-        ])
+        ]))
 
         layer_2 = Layer(3, 1)
-        layer_2.weights = np.array([
+        layer_2.weights = np.transpose(np.array([
             [2],
             [1],
             [-1],
             [1]
-        ])
+        ]))
         model = Sequential([
             layer_1,
             ReLU(),
@@ -63,7 +63,8 @@ class TestSequential(unittest.TestCase):
         ],
         criterion=None)
 
-        model_in = np.expand_dims(np.array([-1, 2]), axis=1)
+        model_in = np.expand_dims(np.array([-1, 2]), axis=0)
+        print(model_in.shape)
         model_out = model.forward(model_in)
         desired_out = np.array([15])
         self.assertTrue(np.all(model_out == desired_out))
@@ -76,7 +77,7 @@ class IntegrationTests(unittest.TestCase):
         def generate_training_example():
             model_in = np.random.randint(low=-10, high=10, size=(1, 1))
             model_out = m * model_in + b
-            return model_in, model_out[0]
+            return model_in, model_out
         
         model = Sequential([
             Layer(1, 1) # Note that the bias term in the layer covers for the y-intercept
