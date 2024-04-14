@@ -2,8 +2,6 @@ import numpy as np
 from abc import ABC, abstractmethod
 from typing import List
 
-np.random.seed(69420)
-
 class Module(ABC):
     @abstractmethod
     def forward(self, x: np.array):
@@ -17,7 +15,6 @@ class LossFn(ABC):
     @abstractmethod
     def __call__(self, y_true: np.array, y_pred: np.array):
         pass
-
 
 class Sequential():
     def __init__(self, modules: List[Module], criterion: LossFn):
