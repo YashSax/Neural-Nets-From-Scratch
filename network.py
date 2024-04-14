@@ -16,10 +16,19 @@ class LossFn(ABC):
     def __call__(self, y_true: np.array, y_pred: np.array):
         pass
 
+
+class Optimizer(ABC):
+    @abstractmethod
+    def step(self):
+        pass
+
+
 class Sequential():
-    def __init__(self, modules: List[Module], criterion: LossFn):
+    def __init__(self, modules: List[Module], criterion: LossFn, optimizer: Optimizer):
         self.modules = modules
         self.criterion = criterion
+        self.optimizer = optimizer
+        self.optimizer.add_layers(modules)
         self.loss = 0
     
     def forward(self, x: np.array):
@@ -37,12 +46,18 @@ class Sequential():
         prev_grad = self.criterion.backward()
         for module in reversed_modules:
             prev_grad = module.backward(prev_grad)
+
+class SGD(Optimizer):
+    def __init__(self, alpha: float):
+        self.alpha = alpha
+
+    def add_layers(self, modules: List[Module]):
+        self.layers = [mod for mod in modules if type(mod) == Layer]
     
-    def SGD_step(self, alpha=0.01):
-        for module in self.modules:
-            if type(module) == Layer:
-                mean_grad = np.transpose(np.mean(module.grad, axis=0))
-                module.weights = module.weights - alpha * mean_grad
+    def step(self):
+        for layer in self.layers:
+            mean_grad = np.transpose(np.mean(layer.grad, axis=0))
+            layer.weights -= self.alpha * mean_grad
 
 
 class MSELoss(LossFn):
