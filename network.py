@@ -22,6 +22,9 @@ class Optimizer(ABC):
     def step(self):
         pass
 
+    def add_layers(self, modules: List[Module]):
+        self.layers = [mod for mod in modules if type(mod) == Layer]
+
 
 class Sequential():
     def __init__(self, modules: List[Module], criterion: LossFn, optimizer: Optimizer):
@@ -47,17 +50,22 @@ class Sequential():
         for module in reversed_modules:
             prev_grad = module.backward(prev_grad)
 
-class SGD(Optimizer):
-    def __init__(self, alpha: float):
-        self.alpha = alpha
 
-    def add_layers(self, modules: List[Module]):
-        self.layers = [mod for mod in modules if type(mod) == Layer]
+class SGD(Optimizer):
+    def __init__(self, lr: float):
+        self.lr = lr
     
     def step(self):
         for layer in self.layers:
             mean_grad = np.transpose(np.mean(layer.grad, axis=0))
-            layer.weights -= self.alpha * mean_grad
+            layer.weights -= self.lr * mean_grad
+
+
+class Adam(Optimizer):
+    def __init__(self, lr: float, beta1=0.9, beta2=0.99):
+        self.lr = lr
+        self.beta1 = beta1
+        self.beta2 = beta2
 
 
 class MSELoss(LossFn):

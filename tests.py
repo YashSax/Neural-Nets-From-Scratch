@@ -61,10 +61,10 @@ class TestSequential(unittest.TestCase):
             ReLU(),
             layer_2
         ],
-        criterion=None)
+        criterion=MSELoss(),
+        optimizer=SGD(lr=0.01))
 
         model_in = np.expand_dims(np.array([-1, 2]), axis=0)
-        print(model_in.shape)
         model_out = model.forward(model_in)
         desired_out = np.array([15])
         self.assertTrue(np.all(model_out == desired_out))
@@ -82,7 +82,8 @@ class IntegrationTests(unittest.TestCase):
         model = Sequential([
             Layer(1, 1) # Note that the bias term in the layer covers for the y-intercept
         ],
-        criterion=MSELoss())
+        criterion=MSELoss(),
+        optimizer=SGD(lr=0.01))
 
         data = [generate_training_example() for _ in range(100)]
         for _ in range(100):
@@ -90,7 +91,7 @@ class IntegrationTests(unittest.TestCase):
             pred_out = model.forward(model_in)
             model.calculate_loss(model_out, pred_out)
             model.backward()
-            model.SGD_step()
+            model.optimizer.step()
         
         model_weights = model.modules[0].weights
         self.assertTrue(np.allclose(model_weights, ideal_weights, 1, 0.2))
