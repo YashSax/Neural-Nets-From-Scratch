@@ -140,6 +140,20 @@ class ReLU(Module):
         self.grad = np.multiply(relu_grad, next_grad)
         return self.grad
 
+class Sigmoid(Module):
+    def __init__(self):
+        self.sigmoid_out = None
+    
+    def forward(self, x: np.array):
+        self.sigmoid_out = 1 / (1 + np.exp(-1 * x))
+        return self.sigmoid_out
+    
+    def backward(self, next_grad: np.array):
+        if self.sigmoid_out is None:
+            raise Exception("'forward' method has not been called on Sigmoid!")
+        relu_grad = np.multiply(self.sigmoid_out, 1 - self.sigmoid_out)
+        self.grad = np.multiply(relu_grad, next_grad)
+        return self.grad
 
 class Softmax(Module):
     def forward(self, x):
