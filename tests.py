@@ -1,6 +1,7 @@
-from network import *
 import random
 import unittest
+from autograd_from_scratch import *
+
 
 class TestActivationFunctions(unittest.TestCase):
     def test_ReLU(self):
