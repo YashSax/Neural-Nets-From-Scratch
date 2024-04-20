@@ -36,6 +36,21 @@ class Layer(Module):
         return out
 
 
+class Softmax(Module):
+    def __init__(self):
+        self.softmax_out = None
+    
+    def forward(self, x: np.array):
+        self.softmax_out = np.exp(x) / np.sum(np.exp(x), axis=1, keepdims=True)
+        return self.softmax_out
+    
+    def backward(self, next_grad: np.array):
+        if self.softmax_out is None:
+            raise Exception("'forward' method has not been called on Softmax!")
+        softmax_grad = (self.softmax_out * (1 - self.softmax_out))
+        return np.multiply(next_grad, softmax_grad)
+
+
 class ReLU(Module):
     def __init__(self):
         self.relu_in = None
