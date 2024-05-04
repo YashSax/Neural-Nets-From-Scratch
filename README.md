@@ -5,6 +5,8 @@
 
 ![classification](https://github.com/YashSax/Autograd-From-Scratch/assets/46911428/9eca5bba-8cc3-4524-9244-f04af6b42ffe)
 ![function_approximation](https://github.com/YashSax/Neural-Nets-From-Scratch/assets/46911428/867d4e0b-0dd2-4194-8398-b22ab1759b48)
+![linear_regression](https://github.com/YashSax/Neural-Nets-From-Scratch/assets/46911428/d506a631-8170-453a-8342-490d666b444b)
+
 
 Example Usage:
 
