@@ -28,7 +28,9 @@ class BCELoss(LossFn):
         batch_size = 1 if len(y_true.shape) == 1 else y_true.shape[0]
         self.y_true = y_true
         self.y_pred = y_pred
-        return -1 / batch_size * np.dot(y_true[:, 1], np.log(y_pred[:, 1]))
+        total_prod = np.transpose(y_true) @ np.log(y_pred)
+
+        return -1 / batch_size * np.sum(total_prod * np.eye(total_prod.shape[0]))
 
     def backward(self):
         self.grad = self.y_true / self.y_pred

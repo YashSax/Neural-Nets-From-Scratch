@@ -45,6 +45,7 @@ class Softmax(Module):
         return self.softmax_out
     
     def backward(self, next_grad: np.array):
+        return next_grad
         if self.softmax_out is None:
             raise Exception("'forward' method has not been called on Softmax!")
         softmax_grad = (self.softmax_out * (1 - self.softmax_out))
