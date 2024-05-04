@@ -10,16 +10,16 @@ Example Usage:
 from autograd_from_scratch import *
 
 model = Sequential([
- Layer(2, 20),
- Sigmoid(),
- Layer(20, 50),
- Sigmoid(),
- Layer(50, 20),
- ReLU(),
- Layer(20, 2)
+    Layer(1, 20),
+    ReLU(),
+    Layer(20, 20),
+    Sigmoid(),
+    Layer(20, 20),
+    Sigmoid(),
+    Layer(20, 1)
 ],
 criterion=MSELoss(),
-optimizer=Adam(lr=0.005, beta=0.9, 0.99)
+optimizer=Adam(lr=0.005, beta1=0.9, beta2=0.99))
 
 def generate_training_example(batch_size):
     model_in = np.random.randint(low=-2*np.pi, high=2*np.pi, size=(batch_size, 1))
