@@ -1,6 +1,8 @@
 ﻿# Neural-Nets-From-Scratch
 
-`neural_nets_from_scratch` is a neural network library I wrote as an effort to better understand how libraries like PyTorch work under the hood. `neural_nets_from_scratch` can be used to create Deep Neural Networks of arbitrary sizes. As this project is mostly for my learning, I've only implemented linear layers, two types of activation functions, and a couple different optimizers. P.S: You might see cases where I refer to this project as an autograd library: since there isn't a dynamic computation graph or anything of the sort (gradient calculation only happens on the specific `Modules` where I write both a `forward` and `backward` pass explicitly), I suppose this project can't really be classified as a true autograd.
+`neural_nets_from_scratch` is a neural network library I wrote as an effort to better understand how libraries like PyTorch work under the hood. `neural_nets_from_scratch` can be used to create Deep Neural Networks of arbitrary sizes. As this project is mostly for my learning, I've only implemented linear layers, two types of activation functions, and a couple different optimizers.
+
+P.S: You might see cases where I refer to this project as an autograd library: since there isn't a dynamic computation graph or anything of the sort (gradient calculation only happens on the specific `Modules` where I write both a `forward` and `backward` pass explicitly), I suppose this project can't really be classified as a true autograd.
 
 ![classification](https://github.com/YashSax/Neural-Nets-From-Scratch/assets/46911428/244f4863-8dd1-4a1c-836d-15d47f8c742d)
 ![function_approximation](https://github.com/YashSax/Neural-Nets-From-Scratch/assets/46911428/867d4e0b-0dd2-4194-8398-b22ab1759b48)
